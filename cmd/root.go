@@ -1,85 +1,89 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
 	"fmt"
 	"os"
-	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/spf13/viper"
+	"github.com/spf13/cobra"
 )
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
+// VERSION number: change manually
+const VERSION = "0.0.0"
+
 var rootCmd = &cobra.Command{
 	Use:   "gh-i",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "gh-i: search repositories interactively",
+	Long:  "gh-i: interactive prompt to search and browse github repositories",
+	Args:  cobra.MaximumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		version, _ := cmd.Flags().GetBool("version")
+		if version {
+			fmt.Println(VERSION)
+			os.Exit(1)
+		}
+		filter, _ := cmd.Flags().GetString("filter")
+		state, _ := cmd.Flags().GetString("state")
+		labelsList, _ := cmd.Flags().GetStringArray("label")
+		sort, _ := cmd.Flags().GetString("sort")
+		// colour, _ := cmd.Flags().GetString("colour")
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+		parsedQuery := parseInput(filter, state, labelsList, sort)
+		fmt.Println(parsedQuery)
+/* 		issues := getIssues(parsedQuery)
+		PromptList := getSelectionPrompt(issues, colour)
+
+		idx, _, err := PromptList.Run()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Println(repos[idx].URL) */
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gh-i.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	var labels []string
+	rootCmd.Flags().StringP("filter", "f", "created", "one of 'assigned,created,mentioned,subscribed,all': default 'createad'")
+	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
+	rootCmd.Flags().StringP("state", "S", "open", "one of 'open,closed,all': default 'open'")
+	rootCmd.Flags().StringP("sort", "s", "updated", "one of 'created,updated': default 'updated'")
+	rootCmd.Flags().StringP("repo", "R", "", "search issues in a specific repository")
+	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
+	rootCmd.Flags().BoolP("version", "V", false, "print current version")
+	rootCmd.SetHelpTemplate(getRootHelp())
 }
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		cobra.CheckErr(err)
+func getRootHelp() string {
+	return `
+gh-i: search your github issues interactively.
 
-		// Search config in home directory with name ".gh-i" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".gh-i")
-	}
+Synopsis:
+	gh i [search] [flags]
 
-	viper.AutomaticEnv() // read in environment variables that match
+Usage:
+	gh i
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
+	if no arguments or flags are given, search the user's
+	github issues across the web. If the flag -R is provided,
+	narrow down the search to a specific repository only.
+
+Prompt commands:
+
+	arrow keys  : move up and down the list
+	/           : toggle fuzzy search
+	enter (<CR>): open selected repository in the web browser
+
+Flags:
+  -R, --repo    only look for issues in a specific repository
+  -c, --colour  change prompt colour
+  -V, --version print current version
+  -h, --help    show this help page
+`
 }
+
