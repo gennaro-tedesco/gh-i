@@ -33,19 +33,20 @@ func parseInput(state string, title string, body string, user string, me bool, l
 	query.Add("q", queryString)
 	query.Add("sort", "updated")
 	query.Add("per_page", "100")
-	fmt.Println(queryString)
 	return query
 }
 
 func getTemplate(colour string) *promptui.SelectTemplates {
 	funcMap := promptui.FuncMap
-
-	funcMap["truncate"] = func(input string) string {
-		length := 80
-		if len(input) <= length {
-			return input
+	funcMap["parseLabels"] = func(Labels []interface{}) string {
+		if len(Labels) == 0 {
+			return ""
 		}
-		return input[:length-3] + "..."
+		var concatLabels string
+		for _, label := range Labels {
+			concatLabels = concatLabels + fmt.Sprintf("%s, ", label.(map[string]interface{})["name"].(string))
+		}
+		return concatLabels[:len(concatLabels)-2]
 	}
 
 	return &promptui.SelectTemplates{
@@ -55,6 +56,7 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 		Details: `
 	{{ "Title:" | faint }} 	{{ .Title }}
 	{{ "Url address:" | faint }} 	{{ .URL }}
+	{{ "Labels:" | faint }} 	{{ .Labels | parseLabels }}
 	`,
 	}
 
