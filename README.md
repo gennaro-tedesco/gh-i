@@ -74,10 +74,8 @@ The prompt accepts the following navigation commands:
 
 ### Execute commands
 `gh-i` must be intended as a filter, to browse the issues you created; as such, the best and most flexible way to execute commands with the results is to pipe it into and from `stdin/stdout`. This said, since in most cases one just wants to view and open the corresponding issue, we default to this action, namely upon selection the issue is opened in the web browser; to override this behaviour and return the output instead, use the `-o` flag.
-```
-# view the issue in the terminal instead
-gh i -u @me -o | xargs -n1 gh issue view
 
-# fetch specifics of the ticket
-gh i -u @me -o | xargs -n1 -I {} echo {} | cut -d"/" -f4,5,7
-```
+Check the [Wiki](https://github.com/gennaro-tedesco/gh-i/wiki) for more example and the most common use cases!
+
+## Feedback
+If you find this application useful consider awarding it a ⭐, it is a great way to give feedback! Otherwise, any additional suggestions or merge request is warmly welcome!
