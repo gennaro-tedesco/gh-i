@@ -35,6 +35,9 @@ Get started!
 ```
 gh i
 ```
+
+![demo](https://user-images.githubusercontent.com/15387611/151810424-38095e48-84b7-4a75-8a2e-fa0fb47eaf6f.gif)
+
 Without any flags `gh i` shows all the issues created by yourself in order of last update: this is in the vast majority of cases what you are after, is it not? To refine the search, however, the following flags are availabe
 ```
 gh i [flag]

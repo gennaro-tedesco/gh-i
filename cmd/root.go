@@ -110,7 +110,7 @@ Flags:
   -c, --colour  change prompt colour
   -o, --output  boolean, whether to return the output to console
                 (if you want to pipe it into something else).
-				Default to false, namely open the issue in the browser
+                Default to false, namely open the issue in the browser
   -V, --version print current version
   -h, --help    show this help page
 
