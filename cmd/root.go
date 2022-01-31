@@ -33,6 +33,7 @@ var rootCmd = &cobra.Command{
 		colour, _ := cmd.Flags().GetString("colour")
 		output, _ := cmd.Flags().GetBool("output")
 
+		explainInput(state, title, body, user, me, labelsList, colour)
 		parsedQuery := parseInput(state, title, body, user, me, labelsList)
 		issues := getIssues(parsedQuery)
 		PromptList := getSelectionPrompt(issues, colour)

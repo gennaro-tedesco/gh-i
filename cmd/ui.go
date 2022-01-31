@@ -6,8 +6,93 @@ import (
 	"os"
 	"strings"
 
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/manifoldco/promptui"
+	"golang.org/x/term"
 )
+
+func colourMap() map[string]text.Color {
+	colourMap := map[string]text.Color{
+		"black":   text.FgBlack,
+		"cyan":    text.FgCyan,
+		"green":   text.FgGreen,
+		"yellow":  text.FgYellow,
+		"blue":    text.FgBlue,
+		"magenta": text.FgMagenta,
+		"red":     text.FgRed,
+		"white":   text.FgWhite,
+	}
+	return colourMap
+}
+
+func explainInput(state string, title string, body string, user string, me bool, labelsList []string, colour string) {
+	var queryString string
+	if state == "" {
+		queryString = queryString + fmt.Sprintf(" state:any +")
+	} else {
+		queryString = queryString + fmt.Sprintf(" state:%s +", state)
+	}
+	if me {
+		queryString = queryString + fmt.Sprintf(" author:yourself +")
+	} else {
+		queryString = queryString + fmt.Sprintf(" author:any +")
+	}
+	if user == "@me" {
+		queryString = queryString + fmt.Sprintf(" where:your repos +")
+	} else if user == "" {
+		queryString = queryString + fmt.Sprintf(" where:anywhere +")
+	} else {
+		queryString = queryString + fmt.Sprintf(" where:repos by %s +", user)
+	}
+	if title != "" {
+		queryString = queryString + fmt.Sprintf(" title:match +")
+	}
+	if body != "" {
+		queryString = queryString + fmt.Sprintf(" body:match +")
+	}
+	if len(labelsList) != 0 {
+		queryString = queryString + fmt.Sprintf(" labels:")
+		for _, label := range labelsList {
+			queryString = queryString + fmt.Sprintf("%s ", label)
+		}
+	}
+	queryString = strings.TrimSuffix(queryString, "+")
+	queryString = strings.TrimSpace(queryString)
+	t := createTable(colour)
+	displayInput(t, queryString)
+	t.AppendSeparator()
+	t.Render()
+}
+
+func createTable(textColour string) table.Writer {
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.SetStyle(table.StyleLight)
+
+	width, _, _ := term.GetSize(0)
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{Number: 1, WidthMax: 2 * width / 3},
+	})
+
+	if colour, ok := colourMap()[textColour]; ok {
+		t.Style().Color.Row = text.Colors{colour}
+	} else {
+		t.Style().Color.Row = text.Colors{text.FgWhite}
+	}
+	t.Style().Options.SeparateColumns = false
+	t.Style().Box.PaddingLeft = "  "
+	t.Style().Box.PaddingRight = "  "
+	t.Style().Box.BottomLeft = "╰"
+	t.Style().Box.TopLeft = "╭"
+	t.Style().Box.TopRight = "╮"
+	t.Style().Box.BottomRight = "╯"
+	return t
+}
+
+func displayInput(t table.Writer, queryString string) {
+	t.AppendRow(table.Row{queryString})
+}
 
 func parseInput(state string, title string, body string, user string, me bool, labelsList []string) url.Values {
 	queryString := fmt.Sprint("type:issue")
