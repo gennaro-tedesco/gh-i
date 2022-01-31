@@ -134,12 +134,17 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 		return concatLabels[:len(concatLabels)-2]
 	}
 
+	funcMap["getRepoName"] = func(URL string) string {
+		urlSlice := strings.Split(URL, "/")
+		return urlSlice[3] + "/" + urlSlice[4]
+	}
+
 	return &promptui.SelectTemplates{
 		Active:   fmt.Sprintf("\U0001F449 {{ .Title | %s | bold }}  {{ .State | faint }}", colour),
 		Inactive: fmt.Sprintf("   {{ .Title | %s }}", colour),
 		Selected: fmt.Sprintf(`{{ "✔" | green | bold }} {{ .Title | %s | bold }}`, colour),
 		Details: `
-	{{ "Title:" | faint }} 	{{ .Title }}
+	{{ "Repository:" | faint }} 	{{ .URL | getRepoName }}
 	{{ "Url address:" | faint }} 	{{ .URL }}
 	{{ "Labels:" | faint }} 	{{ .Labels | parseLabels }}
 	`,

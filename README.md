@@ -62,6 +62,7 @@ $ gh i -s open -u @me --me=false
 ╰──────────────────────────────────────────────╯
 ...
 ```
+as well as inline overlay of issue status when browsing through the selection list.
 
 The prompt accepts the following navigation commands:
 
