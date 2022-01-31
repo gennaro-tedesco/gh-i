@@ -9,7 +9,7 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-func parseInput(state string, title string, body string, user string, author string, labelsList []string) url.Values {
+func parseInput(state string, title string, body string, user string, me bool, labelsList []string) url.Values {
 	queryString := fmt.Sprint("type:issue")
 	if state != "" {
 		queryString = queryString + fmt.Sprintf(" state:%s", state)
@@ -23,12 +23,15 @@ func parseInput(state string, title string, body string, user string, author str
 	if user != "" {
 		queryString = queryString + fmt.Sprintf(" user:%s", user)
 	}
-	queryString = queryString + fmt.Sprintf(" author:%s", author)
+	if me {
+		queryString = queryString + fmt.Sprintf(" author:@me")
+	}
 	for _, label := range labelsList {
 		queryString = queryString + fmt.Sprintf(" label:%s", label)
 	}
 	query := url.Values{}
 	query.Add("q", queryString)
+	query.Add("sort", "updated")
 	query.Add("per_page", "100")
 	fmt.Println(queryString)
 	return query
