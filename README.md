@@ -1,3 +1,9 @@
+<h1 align="center">
+  <br>
+  <img width="150" height="150" src="gh-i-logo.png">
+  <br>
+</h1>
+
 <h2 align="center">
   <a href="#" onclick="return false;">
     <img alt="PR" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat"/>
