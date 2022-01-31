@@ -50,11 +50,11 @@ func Execute() {
 
 func init() {
 	var labels []string
+	rootCmd.Flags().Bool("me", true, "search issues you created")
 	rootCmd.Flags().StringP("state", "s", "", "search by open or closed issues")
 	rootCmd.Flags().StringP("title", "t", "", "search issue by title")
 	rootCmd.Flags().StringP("body", "b", "", "search issue by body")
 	rootCmd.Flags().StringP("user", "u", "", "search issue in repositories owned by user")
-	rootCmd.Flags().Bool("me", true, "search issues you created")
 	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
 	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
 	rootCmd.Flags().BoolP("version", "V", false, "print current version")
@@ -66,14 +66,13 @@ func getRootHelp() string {
 gh-i: search your github issues interactively.
 
 Synopsis:
-	gh i [search] [flags]
+	gh i [flags]
 
 Usage:
 	gh i
 
 	if no arguments or flags are given, search the user's
-	github issues across the web. If the flag -R is provided,
-	narrow down the search to a specific repository only.
+	github issues across the web.
 
 Prompt commands:
 
@@ -82,9 +81,31 @@ Prompt commands:
 	enter (<CR>): open selected repository in the web browser
 
 Flags:
-  -R, --repo    only look for issues in a specific repository
+  --me          boolean, only show issues created by yourself?
+  -s, --state   search issue by state: open or closed
+                defaults to nothing, namely both
+  -t, --title   search for issue titles
+  -b, --body    search in issue body
+  -u, --user    search in repositories owned by specified user
+  -l, --label   match specific issue labels
+                comma separated --> OR (-l="bug,fix")
+                many --> AND (-l=bug -l=fix)
   -c, --colour  change prompt colour
   -V, --version print current version
   -h, --help    show this help page
+
+Examples:
+
+   # search your latest opened issues anywhere
+   gh i -s open
+
+   # search all issues in your own repositories
+   gh i --me=false -u=@me
+
+   # search the feature you requested long time ago
+   gh i -l="feature,feature_request"
+
+   # search by title and body
+   gh i -l="bug" -t="upgrade" -b="new version breaks"
 `
 }
