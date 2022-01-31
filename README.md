@@ -82,3 +82,8 @@ Check the [Wiki](https://github.com/gennaro-tedesco/gh-i/wiki) for more example 
 
 ## Feedback
 If you find this application useful consider awarding it a ⭐, it is a great way to give feedback! Otherwise, any additional suggestions or merge request is warmly welcome!
+
+See also the complete family of extensions
+- [gh-s](https://github.com/gennaro-tedesco/gh-s) to search for repositories with interactive prompt
+- [gh-f](https://github.com/gennaro-tedesco/gh-f) to snap around your git worfklow with `fzf`
+
