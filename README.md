@@ -70,7 +70,7 @@ The prompt accepts the following navigation commands:
 |:------------- |:-----------------------------------
 | arrow keys    | browse results list
 | `/`           | toggle search in results list
-| `enter (<CR>)`| open selected repository in web browser
+| `enter (<CR>)`| open issue in browser or return its URL as output (if `-o`)
 
 ### Execute commands
 `gh-i` must be intended as a filter, to browse the issues you created; as such, the best and most flexible way to execute commands with the results is to pipe it into and from `stdin/stdout`. This said, since in most cases one just wants to view and open the corresponding issue, we default to this action, namely upon selection the issue is opened in the web browser; to override this behaviour and return the output instead, use the `-o` flag.
