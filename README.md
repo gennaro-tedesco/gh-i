@@ -5,8 +5,8 @@
   <a href="https://golang.org/">
     <img alt="Go" src="https://img.shields.io/badge/go-%2300ADD8.svg?&style=flat&logo=go&logoColor=white"/>
   </a>
-  <a href="https://github.com/gennaro-tedesco/gh-s/releases">
-    <img alt="releases" src="https://img.shields.io/github/release/gennaro-tedesco/gh-s"/>
+  <a href="https://github.com/gennaro-tedesco/gh-i/releases">
+    <img alt="releases" src="https://img.shields.io/github/release/gennaro-tedesco/gh-i"/>
   </a>
 </h2>
 
@@ -22,7 +22,7 @@
 # local installation
 gh repo clone gennaro-tedesco/gh-i
 go build .
-gh install .
+gh extension install .
 ```
 This being a `gh` extension, you of course need [gh cli](https://github.com/cli/cli) as prerequisite.
 
@@ -31,7 +31,7 @@ Get started!
 ```
 gh i
 ```
-Without any flags `gh i` shows all the issues created by yourself in order of last update: this is more often than not what you are after, is it not? To refine the search, however, the following flags are availabe
+Without any flags `gh i` shows all the issues created by yourself in order of last update: this is in the vast majority of cases what you are after, is it not? To refine the search, however, the following flags are availabe
 ```
 gh i [flag]
 ```
