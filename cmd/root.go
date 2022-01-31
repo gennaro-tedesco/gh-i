@@ -50,11 +50,11 @@ func Execute() {
 
 func init() {
 	var labels []string
-	rootCmd.Flags().StringP("state", "s", "open", "one of 'open,closed,all': default 'open'")
+	rootCmd.Flags().StringP("state", "s", "open", "open or closed issues: default open")
 	rootCmd.Flags().StringP("title", "t", "", "search issue by title")
 	rootCmd.Flags().StringP("body", "b", "", "search issue by body")
-	rootCmd.Flags().StringP("user", "u", "@me", "search issue in repositories owned by user")
-	rootCmd.Flags().StringP("author", "a", "@me", "search issue created by user")
+	rootCmd.Flags().StringP("user", "u", "", "search issue in repositories owned by user")
+	rootCmd.Flags().StringP("author", "a", "@me", "search issue created by user: default @me")
 	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
 	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
 	rootCmd.Flags().BoolP("version", "V", false, "print current version")

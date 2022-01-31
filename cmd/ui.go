@@ -10,15 +10,19 @@ import (
 )
 
 func parseInput(state string, title string, body string, user string, author string, labelsList []string) url.Values {
-	queryString := fmt.Sprint("type: issue")
-	queryString = queryString + state
+	queryString := fmt.Sprint("type:issue")
+	if state != "" {
+		queryString = queryString + fmt.Sprintf(" state:%s", state)
+	}
 	if title != "" {
 		queryString = queryString + fmt.Sprintf(" %s in:title", title)
 	}
 	if body != "" {
 		queryString = queryString + fmt.Sprintf(" %s in:body", body)
 	}
-	queryString = queryString + fmt.Sprintf(" user:%s", user)
+	if user != "" {
+		queryString = queryString + fmt.Sprintf(" user:%s", user)
+	}
 	queryString = queryString + fmt.Sprintf(" author:%s", author)
 	for _, label := range labelsList {
 		queryString = queryString + fmt.Sprintf(" label:%s", label)

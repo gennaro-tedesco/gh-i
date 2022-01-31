@@ -21,20 +21,21 @@ func getIssues(query url.Values) []issueInfo {
 		log.Fatal(err)
 	}
 
-	var apiResults []map[string]interface{}
+	var apiResults map[string]interface{}
 	err = client.Get("search/issues?"+query.Encode(), &apiResults)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(apiResults)
+	itemsResults := apiResults["items"].([]interface{})
+
 	var issues []issueInfo
-	for _, item := range apiResults {
-		if item["pull_request"] == nil {
+	for _, item := range itemsResults {
+		if item.(map[string]interface{})["pull_request"] == nil {
 			issues = append(issues, issueInfo{
-				Title: item["title"].(string),
-				URL:   item["html_url"].(string),
-				State: item["state"].(string),
+				Title: item.(map[string]interface{})["title"].(string),
+				URL:   item.(map[string]interface{})["html_url"].(string),
+				State: item.(map[string]interface{})["state"].(string),
 			})
 		}
 	}
