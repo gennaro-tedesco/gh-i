@@ -9,9 +9,9 @@ import (
 )
 
 type issueInfo struct {
-	Title     string
-	URL       string
-	UpdatedAt string
+	Title string
+	URL   string
+	State string
 }
 
 func getIssues(query url.Values) []issueInfo {
@@ -22,18 +22,19 @@ func getIssues(query url.Values) []issueInfo {
 	}
 
 	var apiResults []map[string]interface{}
-	err = client.Get("repos/gennaro-tedesco/gh-s/issues?"+query.Encode(), &apiResults)
+	err = client.Get("search/issues?"+query.Encode(), &apiResults)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	fmt.Println(apiResults)
 	var issues []issueInfo
 	for _, item := range apiResults {
-		if item["pull_request"]==nil{
+		if item["pull_request"] == nil {
 			issues = append(issues, issueInfo{
-				Title:     item["title"].(string),
-				URL:       item["html_url"].(string),
-				UpdatedAt: item["updated_at"].(string),
+				Title: item["title"].(string),
+				URL:   item["html_url"].(string),
+				State: item["state"].(string),
 			})
 		}
 	}

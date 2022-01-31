@@ -23,13 +23,15 @@ var rootCmd = &cobra.Command{
 			fmt.Println(VERSION)
 			os.Exit(1)
 		}
-		filter, _ := cmd.Flags().GetString("filter")
 		state, _ := cmd.Flags().GetString("state")
+		title, _ := cmd.Flags().GetString("title")
+		body, _ := cmd.Flags().GetString("body")
+		user, _ := cmd.Flags().GetString("user")
+		author, _ := cmd.Flags().GetString("author")
 		labelsList, _ := cmd.Flags().GetStringArray("label")
-		sort, _ := cmd.Flags().GetString("sort")
 		colour, _ := cmd.Flags().GetString("colour")
 
-		parsedQuery := parseInput(filter, state, labelsList, sort)
+		parsedQuery := parseInput(state, title, body, user, author, labelsList)
 		issues := getIssues(parsedQuery)
 		PromptList := getSelectionPrompt(issues, colour)
 
@@ -48,11 +50,12 @@ func Execute() {
 
 func init() {
 	var labels []string
-	rootCmd.Flags().StringP("filter", "f", "created", "one of 'assigned,created,mentioned,subscribed,all': default 'createad'")
+	rootCmd.Flags().StringP("state", "s", "open", "one of 'open,closed,all': default 'open'")
+	rootCmd.Flags().StringP("title", "t", "", "search issue by title")
+	rootCmd.Flags().StringP("body", "b", "", "search issue by body")
+	rootCmd.Flags().StringP("user", "u", "@me", "search issue in repositories owned by user")
+	rootCmd.Flags().StringP("author", "a", "@me", "search issue created by user")
 	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
-	rootCmd.Flags().StringP("state", "S", "open", "one of 'open,closed,all': default 'open'")
-	rootCmd.Flags().StringP("sort", "s", "updated", "one of 'created,updated': default 'updated'")
-	rootCmd.Flags().StringP("repo", "R", "", "search issues in a specific repository")
 	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
 	rootCmd.Flags().BoolP("version", "V", false, "print current version")
 	rootCmd.SetHelpTemplate(getRootHelp())
