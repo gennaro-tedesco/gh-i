@@ -29,11 +29,13 @@ func getIssues(query url.Values) []issueInfo {
 
 	var issues []issueInfo
 	for _, item := range apiResults {
-		issues = append(issues, issueInfo{
-			Title:     item["title"].(string),
-			URL:       item["html_url"].(string),
-			UpdatedAt: item["updated_at"].(string),
-		})
+		if item["pull_request"]==nil{
+			issues = append(issues, issueInfo{
+				Title:     item["title"].(string),
+				URL:       item["html_url"].(string),
+				UpdatedAt: item["updated_at"].(string),
+			})
+		}
 	}
 	return issues
 }
