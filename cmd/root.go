@@ -86,6 +86,8 @@ Usage:
 
 	if no arguments or flags are given, search the user's
 	github issues across the web.
+    After inputting the set of desired flags, the users gets
+    visual confirmation of the search query in human readable format.
 
 Prompt commands:
 

@@ -50,6 +50,15 @@ takes one of the following arguments or flags
 | -o, --output | print the output to console<br>default to false, namely open in the browser | gh i -u @me -o | xargs -n1 gh issue view
 | -V, --version| print the current version                        | gh i -V
 
+`gh-i` provides the user with visual output of the selected query in human readable format (according to the list of chosen flags):
+```
+$ gh i -s open -u @me --me=false
+╭──────────────────────────────────────────────╮
+│  state:open + author:any + where:your repos  │
+╰──────────────────────────────────────────────╯
+...
+```
+
 The prompt accepts the following navigation commands:
 
 | key           | description
