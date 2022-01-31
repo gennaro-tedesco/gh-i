@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	gh "github.com/cli/go-gh"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +31,7 @@ var rootCmd = &cobra.Command{
 		me, _ := cmd.Flags().GetBool("me")
 		labelsList, _ := cmd.Flags().GetStringArray("label")
 		colour, _ := cmd.Flags().GetString("colour")
+		output, _ := cmd.Flags().GetBool("output")
 
 		parsedQuery := parseInput(state, title, body, user, me, labelsList)
 		issues := getIssues(parsedQuery)
@@ -40,7 +42,16 @@ var rootCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Println(issues[idx].URL)
+		if output {
+			fmt.Println(issues[idx].URL)
+		} else {
+			args := []string{"issue", "view", issues[idx].URL, "-w"}
+			_, _, err := gh.Exec(args...)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+		}
 	},
 }
 
@@ -57,6 +68,7 @@ func init() {
 	rootCmd.Flags().StringP("user", "u", "", "search issue in repositories owned by user")
 	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
 	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
+	rootCmd.Flags().BoolP("output", "o", false, "return issue html url to stdout instead of opening it")
 	rootCmd.Flags().BoolP("version", "V", false, "print current version")
 	rootCmd.SetHelpTemplate(getRootHelp())
 }
@@ -82,8 +94,8 @@ Prompt commands:
 
 Flags:
   --me          boolean, only show issues created by yourself?
-  -s, --state   search issue by state: open or closed
-                defaults to nothing, namely both
+  -s, --state   search issue by state: open or closed.
+                Defaults to nothing, namely both
   -t, --title   search for issue titles
   -b, --body    search in issue body
   -u, --user    search in repositories owned by specified user
@@ -91,6 +103,9 @@ Flags:
                 comma separated --> OR (-l="bug,fix")
                 many --> AND (-l=bug -l=fix)
   -c, --colour  change prompt colour
+  -o, --output  boolean, whether to return the output to console
+                (if you want to pipe it into something else).
+				Default to false, namely open the issue in the browser
   -V, --version print current version
   -h, --help    show this help page
 

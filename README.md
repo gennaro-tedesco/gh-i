@@ -47,6 +47,7 @@ takes one of the following arguments or flags
 | -l, --label  | search for issues by label                       | gh i -l bug -l fix (AND)<br>gh i -l bug,fix (OR)
 | -c, --colour | change colour of the prompt                      | gh i -c magenta
 | -h, --help   | show the help page                               | gh i -h
+| -o, --output | print the output to console<br>default to false, namely open in the browser | gh i -u @me -o | xargs -n1 gh issue view
 | -V, --version| print the current version                        | gh i -V
 
 The prompt accepts the following navigation commands:
@@ -56,3 +57,13 @@ The prompt accepts the following navigation commands:
 | arrow keys    | browse results list
 | `/`           | toggle search in results list
 | `enter (<CR>)`| open selected repository in web browser
+
+### Execute commands
+`gh-i` must be intended as a filter, to browse the issues you created; as such, the best and most flexible way to execute commands with the results is to pipe it into and from `stdin/stdout`. This said, since in most cases one just wants to view and open the corresponding issue, we default to this action, namely upon selection the issue is opened in the web browser; to override this behaviour and return the output instead, use the `-o` flag.
+```
+# view the issue in the terminal instead
+gh i -u @me -o | xargs -n1 gh issue view
+
+# fetch specifics of the ticket
+gh i -u @me -o | xargs -n1 -I {} echo {} | cut -d"/" -f4,5,7
+```
