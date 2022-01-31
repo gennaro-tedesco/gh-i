@@ -17,12 +17,16 @@
   <a href="#Feedback">Feedback</a>
 </h3>
 
+Search GitHub issues interactively from the command line. Where did you open that bug report three weeks ago? And how many feature requests are still open in your organisation 🤔?
+
+...well say no more:
+
+<img alt="example_image" src="https://user-images.githubusercontent.com/15387611/151801136-c765eca3-c453-453a-ad6b-469ba2e2a454.png">
+
+
 ## Installation
 ```
-# local installation
-gh repo clone gennaro-tedesco/gh-i
-go build .
-gh extension install .
+gh extension install gennaro-tedesco/gh-i
 ```
 This being a `gh` extension, you of course need [gh cli](https://github.com/cli/cli) as prerequisite.
 
