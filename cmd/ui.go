@@ -15,21 +15,16 @@ func parseInput(filter string, state string, labelsList []string, sort string) u
 	query.Add("state", state)
 	var labelsString string
 	for _, label := range labelsList {
-		labelsString = labelsString + fmt.Sprintf(label,",")
+		labelsString = labelsString + fmt.Sprintf("%s,",label)
 	}
 	query.Add("sort", sort)
+	query.Add("labels", labelsString)
 	query.Add("per_page", "100")
 	return query
 }
 
 func getTemplate(colour string) *promptui.SelectTemplates {
 	funcMap := promptui.FuncMap
-	funcMap["parseStars"] = func(starCount float64) string {
-		if starCount >= 1000 {
-			return fmt.Sprintf("%.1f k", starCount/1000)
-		}
-		return fmt.Sprint(starCount)
-	}
 
 	funcMap["truncate"] = func(input string) string {
 		length := 80
@@ -40,29 +35,28 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 	}
 
 	return &promptui.SelectTemplates{
-		Active:   fmt.Sprintf("\U0001F449 {{ .Name | %s | bold }}", colour),
-		Inactive: fmt.Sprintf("   {{ .Name | %s }}", colour),
-		Selected: fmt.Sprintf(`{{ "✔" | green | bold }} {{ .Name | %s | bold }}`, colour),
+		Active:   fmt.Sprintf("\U0001F449 {{ .Title | %s | bold }}", colour),
+		Inactive: fmt.Sprintf("   {{ .Title | %s }}", colour),
+		Selected: fmt.Sprintf(`{{ "✔" | green | bold }} {{ .Title | %s | bold }}`, colour),
 		Details: `
-	{{ "Name:" | faint }} 	 {{ .Name }}
-	{{ "Description:" | faint }} 	 {{ .Description | truncate }}
-	{{ "Url address:" | faint }} 	 {{ .URL }}
-	{{ "⭐" | faint }}	{{ .Stars | parseStars }}`,
+	{{ "Title:" | faint }} 	{{ .Title }}
+	{{ "Url address:" | faint }} 	{{ .URL }}
+	{{ "UpdatedAt" | faint }} 	{{ .UpdatedAt }}`,
 	}
 
 }
 
-func getSelectionPrompt(repos []repoInfo, colour string) *promptui.Select {
+func getSelectionPrompt(issues []issueInfo, colour string) *promptui.Select {
 	return &promptui.Select{
 		Stdout:    os.Stderr,
 		Stdin:     os.Stdin,
 		Label:     "repository list",
-		Items:     repos,
+		Items:     issues,
 		Templates: getTemplate(colour),
 		Size:      20,
 		Searcher: func(input string, idx int) bool {
-			repo := repos[idx]
-			title := strings.ToLower(repo.Name)
+			repo := issues[idx]
+			title := strings.ToLower(repo.Title)
 
 			return strings.Contains(title, input)
 		},

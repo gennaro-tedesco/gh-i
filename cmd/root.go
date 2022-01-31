@@ -27,11 +27,10 @@ var rootCmd = &cobra.Command{
 		state, _ := cmd.Flags().GetString("state")
 		labelsList, _ := cmd.Flags().GetStringArray("label")
 		sort, _ := cmd.Flags().GetString("sort")
-		// colour, _ := cmd.Flags().GetString("colour")
+		colour, _ := cmd.Flags().GetString("colour")
 
 		parsedQuery := parseInput(filter, state, labelsList, sort)
-		fmt.Println(parsedQuery)
-/* 		issues := getIssues(parsedQuery)
+		issues := getIssues(parsedQuery)
 		PromptList := getSelectionPrompt(issues, colour)
 
 		idx, _, err := PromptList.Run()
@@ -39,7 +38,7 @@ var rootCmd = &cobra.Command{
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		fmt.Println(repos[idx].URL) */
+		fmt.Println(issues[idx].URL)
 	},
 }
 
@@ -86,4 +85,3 @@ Flags:
   -h, --help    show this help page
 `
 }
-
