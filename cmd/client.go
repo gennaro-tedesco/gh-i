@@ -23,6 +23,7 @@ func getIssues(query url.Values) []issueInfo {
 	var apiResults map[string]interface{}
 	err = client.Get("search/issues?"+query.Encode(), &apiResults)
 	if err != nil {
+		log.Println("\033[31m ✘\033[0m Perhaps you mispelt the user -u?")
 		log.Fatal(err)
 	}
 
