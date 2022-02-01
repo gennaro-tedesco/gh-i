@@ -38,6 +38,10 @@ var rootCmd = &cobra.Command{
 		}
 		parsedQuery := parseInput(state, title, body, user, me, labelsList)
 		issues := getIssues(parsedQuery)
+		if len(issues) == 0 {
+			fmt.Println("\033[31m ✘\033[0m No results found")
+			os.Exit(1)
+		}
 		PromptList := getSelectionPrompt(issues, colour)
 
 		idx, _, err := PromptList.Run()
