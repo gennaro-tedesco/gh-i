@@ -142,7 +142,7 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 
 	funcMap["parseTimestamp"] = func(UpdatedAt string) string {
 		t, _ := time.Parse("2006-01-02T15:04:05Z", UpdatedAt)
-		return t.Format("2006-01-02 15:04:05")
+		return t.Format("2 Jan 2006 15:04:05")
 	}
 
 	return &promptui.SelectTemplates{
