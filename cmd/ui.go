@@ -5,6 +5,7 @@ import (
 	"net/url"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -139,6 +140,11 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 		return urlSlice[3] + "/" + urlSlice[4]
 	}
 
+	funcMap["parseTimestamp"] = func(UpdatedAt string) string {
+		t, _ := time.Parse("2006-01-02T15:04:05Z", UpdatedAt)
+		return t.Format("2006-01-02 15:04:05")
+	}
+
 	return &promptui.SelectTemplates{
 		Active:   fmt.Sprintf("\U0001F449 {{ .Title | %s | bold }}  {{ .State | faint }}", colour),
 		Inactive: fmt.Sprintf("   {{ .Title | %s }}", colour),
@@ -147,6 +153,7 @@ func getTemplate(colour string) *promptui.SelectTemplates {
 	{{ "Repository:" | faint }} 	{{ .URL | getRepoName }}
 	{{ "Url address:" | faint }} 	{{ .URL }}
 	{{ "Labels:" | faint }} 	{{ .Labels | parseLabels }}
+	{{ "Last updated:" | faint }} 	{{ .UpdatedAt | parseTimestamp }}
 	`,
 	}
 

@@ -8,10 +8,11 @@ import (
 )
 
 type issueInfo struct {
-	Title  string
-	URL    string
-	State  string
-	Labels []interface{}
+	Title     string
+	URL       string
+	State     string
+	Labels    []interface{}
+	UpdatedAt string
 }
 
 func getIssues(query url.Values) []issueInfo {
@@ -33,10 +34,11 @@ func getIssues(query url.Values) []issueInfo {
 	for _, item := range itemsResults {
 		if item.(map[string]interface{})["pull_request"] == nil {
 			issues = append(issues, issueInfo{
-				Title:  item.(map[string]interface{})["title"].(string),
-				URL:    item.(map[string]interface{})["html_url"].(string),
-				State:  item.(map[string]interface{})["state"].(string),
-				Labels: item.(map[string]interface{})["labels"].([]interface{}),
+				Title:     item.(map[string]interface{})["title"].(string),
+				URL:       item.(map[string]interface{})["html_url"].(string),
+				State:     item.(map[string]interface{})["state"].(string),
+				Labels:    item.(map[string]interface{})["labels"].([]interface{}),
+				UpdatedAt: item.(map[string]interface{})["updated_at"].(string),
 			})
 		}
 	}
