@@ -50,6 +50,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if output {
+			fmt.Println(issues[idx].Title)
 			fmt.Println(issues[idx].URL)
 		} else {
 			args := []string{"issue", "view", issues[idx].URL, "-w"}
