@@ -11,7 +11,7 @@ import (
 var cfgFile string
 
 // VERSION number: change manually
-const VERSION = "0.0.7"
+const VERSION = "0.0.8"
 
 var rootCmd = &cobra.Command{
 	Use:   "gh-i",
