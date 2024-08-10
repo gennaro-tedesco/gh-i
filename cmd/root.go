@@ -50,6 +50,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		if output {
+			fmt.Println(issues[idx].Title)
 			fmt.Println(issues[idx].URL)
 		} else {
 			args := []string{"issue", "view", issues[idx].URL, "-w"}
@@ -131,5 +132,8 @@ Examples:
 
    # search by title and body
    gh i -l="bug" -t="upgrade" -b="new version breaks"
+
+   # crete a new branch from issue
+   gh -i -o | head -n1 | tr " " "-" | xargs -p -t git checkout -b
 `
 }
