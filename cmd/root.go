@@ -132,5 +132,8 @@ Examples:
 
    # search by title and body
    gh i -l="bug" -t="upgrade" -b="new version breaks"
+
+   # crete a new branch from issue
+   gh -i -o | head -n1 | tr " " "-" | xargs -p -t git checkout -b
 `
 }
