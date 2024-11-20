@@ -28,15 +28,23 @@ var rootCmd = &cobra.Command{
 		title, _ := cmd.Flags().GetString("title")
 		body, _ := cmd.Flags().GetString("body")
 		user, _ := cmd.Flags().GetString("user")
+		givenRepo, _ := cmd.Flags().GetString("repo")
 		me, _ := cmd.Flags().GetBool("me")
 		labelsList, _ := cmd.Flags().GetStringArray("label")
 		colour, _ := cmd.Flags().GetString("colour")
 		output, _ := cmd.Flags().GetBool("output")
 
-		if !output {
-			explainInput(state, title, body, user, me, labelsList, colour)
+		repo, err := parseRepo(givenRepo)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
 		}
-		parsedQuery := parseInput(state, title, body, user, me, labelsList)
+
+		if !output {
+			explainInput(state, title, body, user, repo, me, labelsList, colour)
+		}
+		parsedQuery := parseInput(state, title, body, user, repo, me, labelsList)
+
 		issues := getIssues(parsedQuery)
 		if len(issues) == 0 {
 			fmt.Println("\033[31m ✘\033[0m No results found")
@@ -74,6 +82,7 @@ func init() {
 	rootCmd.Flags().StringP("title", "t", "", "search issue by title")
 	rootCmd.Flags().StringP("body", "b", "", "search issue by body")
 	rootCmd.Flags().StringP("user", "u", "", "search issue in repositories owned by user")
+	rootCmd.Flags().StringP("repo", "r", "", "search in specified repository")
 	rootCmd.Flags().StringArrayVarP(&labels, "label", "l", []string{}, "search issue by label")
 	rootCmd.Flags().StringP("colour", "c", "cyan", "colour of selection prompt")
 	rootCmd.Flags().BoolP("output", "o", false, "return issue html url to stdout instead of opening it")
@@ -109,6 +118,8 @@ Flags:
   -t, --title   search for issue titles
   -b, --body    search in issue body
   -u, --user    search in repositories owned by specified user
+  -r, --repo    search in specified "OWNER/REPO" repository.
+                Defaults to respecting $GH_REPO or $PWD
   -l, --label   match specific issue labels
                 comma separated --> OR (-l="bug,fix")
                 many --> AND (-l=bug -l=fix)
@@ -123,6 +134,11 @@ Examples:
 
    # search your latest opened issues anywhere
    gh i -s open
+
+   # search your issues for a repository
+   gh i -r your/repository
+   cd ~/repositories/your/repository
+   gh i
 
    # search all issues in your own repositories
    gh i --me=false -u=@me
