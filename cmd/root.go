@@ -119,6 +119,7 @@ Flags:
   -b, --body    search in issue body
   -u, --user    search in repositories owned by specified user
   -r, --repo    search in specified "OWNER/REPO" repository.
+                if you turn on $GH_I_PREFER_REPO,
                 Defaults to respecting $GH_REPO or $PWD
   -l, --label   match specific issue labels
                 comma separated --> OR (-l="bug,fix")
@@ -138,7 +139,7 @@ Examples:
    # search your issues for a repository
    gh i -r your/repository
    cd ~/repositories/your/repository
-   gh i
+   GH_I_PREFER_REPO=true gh i
 
    # search all issues in your own repositories
    gh i --me=false -u=@me

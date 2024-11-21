@@ -103,9 +103,11 @@ func displayInput(t table.Writer, queryString string) {
 
 func parseRepo(repo string) (string, error) {
 	if repo == "" {
-		currentRepo, err := gh.CurrentRepository()
-		if err == nil {
-			repo = currentRepo.Owner() + "/" + currentRepo.Name()
+		if os.Getenv("GH_I_PREFER_REPO") != "" {
+			currentRepo, err := gh.CurrentRepository()
+			if err == nil {
+				repo = currentRepo.Owner() + "/" + currentRepo.Name()
+			}
 		}
 	}
 	if repo != "" {

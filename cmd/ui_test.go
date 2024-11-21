@@ -69,12 +69,21 @@ func TestParseRepo(t *testing.T) {
 			ok:     false,
 			errmsg: `expected the "OWNER/REPO" format, got "gh-i"`,
 		},
-		"not given a repo but having $GH_REPO": {
+		"not given a repo but having only $GH_REPO": {
+			input: "",
+			ok:    true,
+			want:  "",
+			envs: map[string]string{
+				"GH_REPO": "gennaro-tedesco/gh-f",
+			},
+		},
+		"not given a repo but having both $GH_REPO and $GH_I_PREFER_REPO": {
 			input: "",
 			ok:    true,
 			want:  "gennaro-tedesco/gh-f",
 			envs: map[string]string{
-				"GH_REPO": "gennaro-tedesco/gh-f",
+				"GH_REPO":          "gennaro-tedesco/gh-f",
+				"GH_I_PREFER_REPO": "true",
 			},
 		},
 		// No test case added for "no input and no $GH_REPO" due to gh command respecting current directory.
