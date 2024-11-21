@@ -44,7 +44,7 @@ gh i
 
 ![demo](https://user-images.githubusercontent.com/15387611/151810424-38095e48-84b7-4a75-8a2e-fa0fb47eaf6f.gif)
 
-Without any flags `gh i` shows all the issues created by yourself in order of last update: this is in the vast majority of cases what you are after, is it not? To refine the search, however, the following flags are availabe
+Without any flags `gh i` shows all the issues created by yourself in order of last update: this is in the vast majority of cases what you are after, is it not? To refine the search, however, the following flags are available
 ```
 gh i [flag]
 ```
@@ -91,5 +91,5 @@ If you find this application useful consider awarding it a ⭐, it is a great wa
 
 See also the complete family of extensions
 - [gh-s](https://github.com/gennaro-tedesco/gh-s) to search for repositories with interactive prompt
-- [gh-f](https://github.com/gennaro-tedesco/gh-f) to snap around your git worfklow with `fzf`
+- [gh-f](https://github.com/gennaro-tedesco/gh-f) to snap around your git workflow with `fzf`
 
