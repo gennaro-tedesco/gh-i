@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cli/go-gh"
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/manifoldco/promptui"
@@ -27,7 +28,7 @@ func colourMap() map[string]text.Color {
 	return colourMap
 }
 
-func explainInput(state string, title string, body string, user string, me bool, labelsList []string, colour string) {
+func explainInput(state string, title string, body string, user string, repo string, me bool, labelsList []string, colour string) {
 	var queryString string
 	if state == "" {
 		queryString = queryString + fmt.Sprintf(" state:any +")
@@ -39,13 +40,18 @@ func explainInput(state string, title string, body string, user string, me bool,
 	} else {
 		queryString = queryString + fmt.Sprintf(" author:any +")
 	}
-	if user == "@me" {
-		queryString = queryString + fmt.Sprintf(" where:your repos +")
-	} else if user == "" {
-		queryString = queryString + fmt.Sprintf(" where:anywhere +")
+	if repo == "" {
+		if user == "@me" {
+			queryString = queryString + fmt.Sprintf(" where:your repos +")
+		} else if user == "" {
+			queryString = queryString + fmt.Sprintf(" where:anywhere +")
+		} else {
+			queryString = queryString + fmt.Sprintf(" where:repos by %s +", user)
+		}
 	} else {
-		queryString = queryString + fmt.Sprintf(" where:repos by %s +", user)
+		queryString = queryString + fmt.Sprintf(" where:repo is %s +", repo)
 	}
+
 	if title != "" {
 		queryString = queryString + fmt.Sprintf(" title:match +")
 	}
@@ -95,7 +101,30 @@ func displayInput(t table.Writer, queryString string) {
 	t.AppendRow(table.Row{queryString})
 }
 
-func parseInput(state string, title string, body string, user string, me bool, labelsList []string) url.Values {
+func parseRepo(repo string) (string, error) {
+	if repo == "" {
+		if os.Getenv("GH_I_PREFER_REPO") != "" {
+			currentRepo, err := gh.CurrentRepository()
+			if err == nil {
+				repo = currentRepo.Owner() + "/" + currentRepo.Name()
+			}
+		}
+	}
+	if repo != "" {
+		fields := strings.SplitN(repo, "/", 2)
+		if len(fields) != 2 {
+			return "", fmt.Errorf(`expected the "OWNER/REPO" format, got %q`, repo)
+		}
+		for _, field := range fields {
+			if len(field) == 0 {
+				return "", fmt.Errorf(`expected the "OWNER/REPO" format, got %q`, repo)
+			}
+		}
+	}
+	return repo, nil
+}
+
+func parseInput(state string, title string, body string, user string, repo string, me bool, labelsList []string) url.Values {
 	queryString := fmt.Sprint("type:issue")
 	if state != "" {
 		queryString = queryString + fmt.Sprintf(" state:%s", state)
@@ -108,6 +137,9 @@ func parseInput(state string, title string, body string, user string, me bool, l
 	}
 	if user != "" {
 		queryString = queryString + fmt.Sprintf(" user:%s", user)
+	}
+	if repo != "" {
+		queryString = queryString + fmt.Sprintf(" repo:%s", repo)
 	}
 	if me {
 		queryString = queryString + fmt.Sprintf(" author:@me")
