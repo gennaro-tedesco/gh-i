@@ -1,6 +1,6 @@
 module github.com/gennaro-tedesco/gh-i
 
-go 1.18
+go 1.23.3
 
 require (
 	github.com/cli/go-gh v1.2.1
