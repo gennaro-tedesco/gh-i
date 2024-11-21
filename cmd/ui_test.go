@@ -88,7 +88,6 @@ func TestParseRepo(t *testing.T) {
 		},
 		// No test case added for "no input and no $GH_REPO" due to gh command respecting current directory.
 		// Preferring "gh-f" over "gh-i" for a fixture is rooted in the same reason.
-		// TODO: Add the test pattern since using go 1.24 https://github.com/golang/go/issues/62516#issuecomment-2187122559
 	}
 
 	for description, testCase := range testCases {
