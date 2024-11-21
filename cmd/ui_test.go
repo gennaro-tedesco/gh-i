@@ -86,8 +86,6 @@ func TestParseRepo(t *testing.T) {
 				"GH_I_PREFER_REPO": "true",
 			},
 		},
-		// No test case added for "no input and no $GH_REPO" due to gh command respecting current directory.
-		// Preferring "gh-f" over "gh-i" for a fixture is rooted in the same reason.
 	}
 
 	for description, testCase := range testCases {
