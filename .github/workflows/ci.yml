@@ -27,4 +27,11 @@ jobs:
         with:
           go-version-file: 'go.mod'
           cache-dependency-path: 'go.sum'
-      - run: go build -v -race ./...
+      - name: Build
+        run: |
+          mkdir -p dist
+          go build -v -o dist -race ./...
+      - name: Smoke test
+        run: |
+          ./dist/gh-i --version
+          ./dist/gh-i --help
