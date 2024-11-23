@@ -21,8 +21,8 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		version, _ := cmd.Flags().GetBool("version")
 		if version {
-			fmt.Println(VERSION)
-			os.Exit(1)
+			fmt.Fprintln(cmd.OutOrStdout(), VERSION)
+			return
 		}
 		state, _ := cmd.Flags().GetString("state")
 		title, _ := cmd.Flags().GetString("title")
